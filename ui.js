@@ -174,6 +174,7 @@ function enterGame() {
 }
 
 function switchTab(tab) {
+  $('#hub').classList.toggle('on-home', tab === 'home');
   document.querySelectorAll('.hub-pane').forEach(p => p.classList.remove('show'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
   const pane = $('#pane-' + tab);

@@ -38,9 +38,12 @@ button:active { transform: translateY(2px); }
 }
 .hub::before {
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 844' preserveAspectRatio='xMidYMax slice'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%235b77c9' stop-opacity='.35'/%3E%3Cstop offset='1' stop-color='%232e4287' stop-opacity='.9'/%3E%3C/linearGradient%3E%3ClinearGradient id='bush' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%2343b56f'/%3E%3Cstop offset='1' stop-color='%231d6b45'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='310' cy='115' r='44' fill='%23ffeeb0' opacity='.18'/%3E%3Ccircle cx='310' cy='115' r='26' fill='%23fff6cf' opacity='.35'/%3E%3Cpath d='M0 540 Q195 505 390 540 L390 844 L0 844 Z' fill='url(%23g1)'/%3E%3Cellipse cx='40' cy='545' rx='95' ry='48' fill='url(%23bush)'/%3E%3Cellipse cx='355' cy='545' rx='95' ry='48' fill='url(%23bush)'/%3E%3Cellipse cx='195' cy='535' rx='110' ry='32' fill='%23298253' opacity='.7'/%3E%3Crect x='255' y='440' width='14' height='80' rx='6' fill='%23784c35'/%3E%3Ccircle cx='262' cy='432' r='16' fill='%23ffd24d' opacity='.45'/%3E%3Ccircle cx='262' cy='432' r='9' fill='%23fff4b8'/%3E%3Cg fill='%23708be0' opacity='.28'%3E%3Cellipse cx='95' cy='610' rx='36' ry='14'/%3E%3Cellipse cx='195' cy='625' rx='44' ry='16'/%3E%3Cellipse cx='295' cy='608' rx='38' ry='14'/%3E%3Cellipse cx='135' cy='675' rx='48' ry='18'/%3E%3Cellipse cx='255' cy='680' rx='46' ry='17'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: cover; background-position: center bottom;
+  background:
+    linear-gradient(180deg, rgba(20, 30, 68, 0.55) 0%, rgba(20, 30, 68, 0.05) 25%, rgba(20, 30, 68, 0.05) 70%, rgba(20, 30, 68, 0.6) 100%),
+    url("assets/home_scene.jpg?v=app-0.1.6") center 42% / cover no-repeat;
+  transition: opacity 0.2s;
 }
+.hub:not(.on-home)::before { opacity: 0.18; filter: blur(4px); }
 .hub > * { position: relative; z-index: 1; }
 .hub.show { display: flex; }
 
@@ -51,10 +54,12 @@ button:active { transform: translateY(2px); }
 .prof-btn, .gear-btn {
   width: 44px; height: 44px; border-radius: 14px;
   background: linear-gradient(180deg, #7495f2 0%, #4464bd 100%);
-  border: 2.5px solid #d5e3ff;
+  border: 2.5px solid #fff2cc;
   box-shadow: 0 4px 0 #1f326e, inset 0 2px 0 rgba(255,255,255,0.45);
   font-size: 20px; display: grid; place-items: center; color: #fff; flex-shrink: 0;
+  overflow: hidden; padding: 0;
 }
+.prof-btn img { width: 100%; height: 100%; object-fit: cover; }
 .res-pill {
   flex: 1; height: 40px; border-radius: 99px;
   background: linear-gradient(180deg, rgba(16,24,60,0.78), rgba(26,38,88,0.88));
@@ -114,10 +119,12 @@ button:active { transform: translateY(2px); }
 }
 
 /* ホーム中央ステージ */
+#mascot { display: none; }
 .home-stage {
   flex: 1; position: relative; display: flex; flex-direction: column;
-  align-items: center; justify-content: space-between; padding: 8px 0 14px;
+  align-items: center; justify-content: flex-start; padding: 8px 0 14px;
 }
+.home-stage .play-hero { margin-top: auto; }
 .home-float-r {
   position: absolute; right: 0; top: 6px; display: flex; flex-direction: column; gap: 10px; z-index: 2;
 }
