@@ -1,6 +1,26 @@
 // File: ui.js — Antflow App Store Edition
 'use strict';
 
+/* ================= 効果音の追加（render.js 互換） ================= */
+Sound.fever = function () {
+  if (!this.ok()) return;
+  [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => this.mallet(f, i * 0.06, 0.1));
+  this.noise(0, 0.5, 0.04, 3200, 'bandpass', 0.6);
+};
+Sound.gold = function () {
+  if (!this.ok()) return;
+  [1318.5, 1760, 2093].forEach((f, i) => this.bell(f, i * 0.07, 0.035, 0.6));
+};
+Sound.coin = function () {
+  if (!this.ok()) return;
+  this.tone(1568, 0.08, { vol: 0.05, type: 'square' });
+  this.tone(2093, 0.22, { vol: 0.045, type: 'square', when: 0.07 });
+};
+Sound.nice = function () { if (this.ok()) [659.25, 987.77].forEach((f, i) => this.mallet(f, i * 0.08, 0.1)); };
+Sound.perfectBox = function () { if (this.ok()) [523.25, 659.25, 783.99].forEach((f, i) => this.mallet(f, i * 0.045, 0.085)); };
+Sound.chain = function (n) { if (this.ok()) [587.33, 739.99, 880, 1174.66].slice(0, Math.min(4, 2 + (n || 1))).forEach((f, i) => this.mallet(f, i * 0.055, 0.1)); };
+Sound.lastSpurt = function () { if (this.ok()) [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => this.bell(f, i * 0.05, 0.045, 0.45)); };
+
 /* ================= ネイティブ課金・広告ブリッジ（Capacitor接続用） ================= */
 const AppBridge = {
   isNative() { return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()); },
