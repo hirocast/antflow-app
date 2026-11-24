@@ -192,8 +192,8 @@ function updateHomeUI() {
   const pct = ((pos % 5) || 5) / 5 * 100;
   $('#mileFill').style.width = pct + '%';
   $('#mileTxt').textContent = 'Level ' + nextMile + ' まであと ' + (nextMile - pos + 1);
-  const art = ARTS[idAt(pos)];
-  $('#homeArtHint').textContent = art ? 'つぎの絵：' + art.name : '';
+  const art = ARTS[idAt(pos) - 1];
+  $('#homeArtHint').textContent = art ? 'つぎの絵：' + art.n : '';
   const today = new Date().toISOString().slice(0, 10);
   const dailyDone = save.daily.day === today && save.daily.step >= 5;
   $('#dailyDot').style.display = dailyDone ? 'none' : 'grid';
@@ -279,16 +279,16 @@ function renderAlbum() {
   let clearedCount = 0;
   grid.innerHTML = '';
   for (let p = 1; p <= TOTAL; p++) {
-    const id = idAt(p), art = ARTS[id], ok = !!save.cleared[id];
+    const id = idAt(p), art = ARTS[id - 1], ok = !!save.cleared[id];
     if (ok) clearedCount++;
     const card = document.createElement('button');
     card.type = 'button';
     card.className = 'acard' + (ok ? '' : ' lock');
     const cv = document.createElement('canvas');
     cv.width = 64; cv.height = 64;
-    if (ok && art) drawArtThumb(cv, art);
+    if (ok && art) drawArtThumb(cv, id);
     const b = document.createElement('b');
-    b.textContent = ok && art ? art.name : 'Lv.' + p;
+    b.textContent = ok && art ? art.n : 'Lv.' + p;
     card.appendChild(cv); card.appendChild(b);
     if (ok) card.addEventListener('click', () => openView(id));
     grid.appendChild(card);
@@ -297,9 +297,9 @@ function renderAlbum() {
   $('#albumSumBar').style.width = Math.round(clearedCount / TOTAL * 100) + '%';
 }
 
-function drawArtThumb(cv, art) {
+function drawArtThumb(cv, id) {
   const g = cv.getContext('2d');
-  const rast = getArt(art);
+  const rast = getArt(id);
   const W = rast.W, H = rast.H, s = Math.floor(Math.min(56 / W, 56 / H));
   const ox = (64 - W * s) / 2, oy = (64 - H * s) / 2;
   g.clearRect(0, 0, 64, 64);
@@ -310,11 +310,11 @@ function drawArtThumb(cv, art) {
 }
 
 function openView(id) {
-  const art = ARTS[id];
+  const art = ARTS[id - 1];
   if (!art) return;
   G.viewId = id;
-  $('#viewName').textContent = art.name;
-  drawArtThumb($('#viewCv'), art);
+  $('#viewName').textContent = art.n;
+  drawArtThumb($('#viewCv'), id);
   $('#viewInfo').textContent = 'Level ' + posOf(id) + ' のピクセルアート';
   showOv('view');
 }
@@ -375,6 +375,16 @@ function applyLevel(id, L) {
   Sound.setBgm(L.name, L.theme);
   updateHUD();
   updateBoosterBar();
+}
+
+function headCounts(s) {
+  const out = new Array(s.cols.length).fill(0);
+  for (let j = 0; j < s.cols.length; j++) {
+    if (s.heads[j] >= s.cols[j].length) continue;
+    const t = cloneState(s), b = place(t, j, null);
+    out[j] = b.n - b.rem;
+  }
+  return out;
 }
 
 function resetVisual() {
