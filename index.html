@@ -1,0 +1,265 @@
+<!-- File: index.html -->
+<!DOCTYPE html>
+<html lang="ja" class="af-booting">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#3c569c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="アントフロー">
+<title>アントフロー</title>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css?v=app-0.1.0">
+</head>
+<body>
+
+<!-- ========== メインハブ（ホーム / ショップ / アルバム / ランキング） ========== -->
+<div id="hub" class="hub show">
+  <div class="hub-top">
+    <button type="button" class="prof-btn" id="bProfile" aria-label="プロフィール">🐜</button>
+    <button type="button" class="res-pill" id="bTopCoin"><span class="ri">🪙</span><b id="hubCoins">500</b><em class="plus">+</em></button>
+    <button type="button" class="res-pill" id="bTopHeart"><span class="ri">❤️</span><b id="hubHearts">5</b><small id="hubHeartTimer"></small><em class="plus">+</em></button>
+    <button type="button" class="gear-btn" id="bSet" aria-label="設定">⚙️</button>
+  </div>
+
+  <!-- タブ1: ホーム -->
+  <section class="hub-pane show" id="pane-home">
+    <div class="mile-bar">
+      <div class="mile-ico" id="mileIco">🎨</div>
+      <div class="mile-track"><i id="mileFill"></i><span id="mileTxt">Lv.5 で新ステージ解放</span></div>
+    </div>
+
+    <div class="home-stage">
+      <div class="home-float-r">
+        <button type="button" class="float-badge noads" id="bFloatNoAds">
+          <span class="fb-ico">📺🚫</span>
+          <small>広告なし</small>
+        </button>
+        <button type="button" class="float-badge daily" id="bFloatDaily">
+          <span class="fb-ico">🎁</span>
+          <small>デイリー</small>
+          <em class="dot" id="dailyDot">!</em>
+        </button>
+      </div>
+
+      <div class="streak-chip" id="homeStreak">🔥 0 連勝中</div>
+      <canvas id="mascot"></canvas>
+      <div class="home-art-hint" id="homeArtHint"></div>
+
+      <button type="button" class="play-hero" id="bPlay">
+        <span>Level <b id="playLvNum">1</b></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- タブ2: ショップ -->
+  <section class="hub-pane" id="pane-shop">
+    <div class="pane-head">🛒 ショップ</div>
+    <div class="shop-scroll" id="shopScroll"></div>
+  </section>
+
+  <!-- タブ3: アルバム -->
+  <section class="hub-pane" id="pane-album">
+    <div class="pane-head">📒 アルバム <small id="albumSum"></small></div>
+    <div class="abar"><i id="albumSumBar"></i></div>
+    <div id="albumGrid" class="grid"></div>
+  </section>
+
+  <!-- タブ4: ランキング -->
+  <section class="hub-pane" id="pane-rank">
+    <div class="pane-head">🏆 ランキング</div>
+    <div class="rank-list" id="rankList"></div>
+  </section>
+
+  <nav class="hub-nav">
+    <button type="button" class="nav-btn" data-tab="shop"><i>🛒</i><span>ショップ</span></button>
+    <button type="button" class="nav-btn on" data-tab="home"><i>🏠</i><span>ホーム</span></button>
+    <button type="button" class="nav-btn" data-tab="album"><i>📒</i><span>アルバム</span></button>
+    <button type="button" class="nav-btn" data-tab="rank"><i>🏆</i><span>ランキング</span></button>
+  </nav>
+</div>
+
+<!-- ========== パズルプレイ画面 ========== -->
+<div id="app">
+  <header>
+    <button type="button" class="ib pause-btn" id="bPause" aria-label="ポーズ">⏸</button>
+    <div class="lv-head">
+      <div class="lv-title"><b id="lvNum">Level 1</b><span id="lvName"></span></div>
+      <div class="prog"><div class="bar"><i id="progBar"></i></div><span id="leftTxt">0</span></div>
+    </div>
+    <button type="button" class="speed-btn" id="bSpeed">⏩ 1x</button>
+  </header>
+
+  <div id="stage">
+    <canvas id="game"></canvas>
+    <div id="tip"></div>
+    <div id="toast"></div>
+  </div>
+
+  <footer id="boosterBar">
+    <button type="button" class="bst-btn" data-bst="slot" id="bBstSlot">
+      <span class="bst-ico">📥</span>
+      <small>枠+1</small>
+      <em class="bst-cnt" id="cntSlot">+</em>
+    </button>
+    <button type="button" class="bst-btn" data-bst="shuffle" id="bBstShuffle">
+      <span class="bst-ico">🔀</span>
+      <small>シャッフル</small>
+      <em class="bst-cnt" id="cntShuffle">+</em>
+    </button>
+    <button type="button" class="bst-btn" data-bst="pickup" id="bBstPickup">
+      <span class="bst-ico">🦾</span>
+      <small>ピックアップ</small>
+      <em class="bst-cnt" id="cntPickup">+</em>
+    </button>
+    <button type="button" class="bst-btn" data-bst="tornado" id="bBstTornado">
+      <span class="bst-ico">🌀</span>
+      <small>1色けし</small>
+      <em class="bst-cnt" id="cntTornado">+</em>
+    </button>
+  </footer>
+
+  <div class="ad-banner" id="adBanner">
+    <span>AD：広告スペース</span>
+    <button type="button" id="bBannerRemove">広告を消す ✕</button>
+  </div>
+</div>
+
+<!-- ========== モーダル群 ========== -->
+<div class="ov" id="ov-title"><div class="card">
+  <h2>アントフロー</h2>
+  <p class="fine">読み込み中…</p>
+</div></div>
+
+<div class="ov" id="ov-load"><div class="card">
+  <canvas id="loadCv"></canvas>
+  <h2>ステージ準備中…</h2>
+</div></div>
+
+<!-- クリア画面 -->
+<div class="ov" id="ov-clear"><div class="card modal-pop">
+  <div class="modal-ribbon">🎉 LEVEL CLEAR!</div>
+  <canvas id="revealCv"></canvas>
+  <p id="clearName" class="clear-name"></p>
+  <p class="cstars" id="clearStars"></p>
+  <div class="clear-reward" id="clearReward">🪙 +30</div>
+  <button type="button" class="big green pulse" id="bNext">つぎのレベルへ ▶</button>
+  <button type="button" class="big sec" id="bClearHome">🏠 ホームへ</button>
+</div></div>
+
+<!-- 失敗（Out of slots）＋ Fail Offer -->
+<div class="ov" id="ov-jam"><div class="card modal-pop">
+  <button type="button" class="close-x" id="bJamClose">✕</button>
+  <div class="modal-ribbon blue">スロットがいっぱい！</div>
+  <div class="jam-preview">🐜💦 スロットを空けて続けよう！</div>
+  <button type="button" class="big green" id="bJamContinue">🪙 900 でつづける</button>
+  <div class="fail-offer" id="failOfferBox">
+    <div class="fo-body">
+      <div class="fo-left">
+        <span class="fo-tag">即復活！</span>
+        <b>🪙 2,700</b>
+      </div>
+      <div class="fo-items">
+        <span>🌀×1</span><span>🦾×1</span><span>🔀×1</span>
+      </div>
+    </div>
+    <div class="fo-foot">
+      <span>🔥 Fail Offer（失敗限定）</span>
+      <button type="button" class="fo-buy" id="bFailOffer">¥1,000</button>
+    </div>
+  </div>
+  <button type="button" class="link danger" id="bJamGiveUp">あきらめる（❤️ -1）</button>
+</div></div>
+
+<!-- ポーズ -->
+<div class="ov" id="ov-pause"><div class="card modal-pop">
+  <button type="button" class="close-x" id="bPauseClose">✕</button>
+  <div class="modal-ribbon blue">ポーズ</div>
+  <button type="button" class="big green" id="bPauseResume">▶ つづける</button>
+  <button type="button" class="big sec" id="bPauseRetry">⟳ やりなおす（❤️ -1）</button>
+  <button type="button" class="big sec" id="bPauseHome">🏠 ホームにもどる（❤️ -1）</button>
+</div></div>
+
+<!-- ブースター購入 -->
+<div class="ov" id="ov-booster"><div class="card modal-pop">
+  <button type="button" class="close-x" id="bBstClose">✕</button>
+  <div class="modal-ribbon blue" id="bstTitle">Booster</div>
+  <div class="bst-hero">
+    <div class="bst-hero-ico" id="bstIco">📥</div>
+    <div class="bst-hero-qty">×3</div>
+  </div>
+  <p class="bst-desc" id="bstDesc"></p>
+  <button type="button" class="big green" id="bBstBuy">🪙 1600</button>
+</div></div>
+
+<!-- ハート回復 -->
+<div class="ov" id="ov-life"><div class="card modal-pop">
+  <button type="button" class="close-x" id="bLifeClose">✕</button>
+  <div class="modal-ribbon blue">ライフ（ハート）</div>
+  <div class="life-hero">❤️ <b id="lifeVal">5</b></div>
+  <div class="life-timer" id="lifeNextTxt">MAX</div>
+  <button type="button" class="big gold" id="bLifeCoin">🪙 800 で全回復 (+5❤️)</button>
+  <button type="button" class="big green" id="bLifeAd">🎬 広告を見て +1❤️ (FREE)</button>
+</div></div>
+
+<!-- デイリーリワード -->
+<div class="ov" id="ov-daily"><div class="card modal-pop">
+  <button type="button" class="close-x" id="bDailyClose">✕</button>
+  <div class="modal-ribbon blue">デイリー報酬</div>
+  <div class="daily-list" id="dailyList"></div>
+</div></div>
+
+<!-- プロフィール・実績 -->
+<div class="ov" id="ov-profile"><div class="card modal-pop">
+  <button type="button" class="close-x" id="bProfClose">✕</button>
+  <div class="modal-ribbon blue">プロフィール</div>
+  <div class="prof-card">
+    <div class="prof-av">🐜</div>
+    <div>
+      <b id="profName">Player</b>
+      <div class="fine" id="profLv">Level 1</div>
+    </div>
+  </div>
+  <div class="ach-grid" id="achGrid"></div>
+</div></div>
+
+<!-- 設定 -->
+<div class="ov" id="ov-settings"><div class="card modal-pop">
+  <button type="button" class="close-x" id="bSetClose">✕</button>
+  <div class="modal-ribbon blue">せってい</div>
+  <div class="set-icons">
+    <button type="button" class="set-ico" id="tBgm">🎵<small>BGM</small></button>
+    <button type="button" class="set-ico" id="tSfx">🔊<small>効果音</small></button>
+    <button type="button" class="set-ico" id="tVib">📳<small>振動</small></button>
+    <button type="button" class="set-ico" id="tCb">👁️<small>記号</small></button>
+  </div>
+  <button type="button" class="big green" id="bSetPrivacy">プライバシーポリシー</button>
+  <button type="button" class="big blue" id="bSetRestore">購入を復元（Restore）</button>
+  <button type="button" class="big red" id="bReset">データをリセット</button>
+</div></div>
+
+<!-- アルバム詳細 -->
+<div class="ov" id="ov-view"><div class="card modal-pop">
+  <button type="button" class="close-x" id="bViewClose">✕</button>
+  <div class="modal-ribbon blue" id="viewName"></div>
+  <canvas id="viewCv"></canvas>
+  <p id="viewInfo" class="fine"></p>
+  <button type="button" class="big green" id="bViewPlay">このステージをあそぶ</button>
+</div></div>
+
+<canvas id="fx"></canvas>
+
+<script src="boot.js?v=app-0.1.0"></script>
+<script src="base.js?v=app-0.1.0"></script>
+<script src="arts.js?v=app-0.1.0"></script>
+<script src="raster.js?v=app-0.1.0"></script>
+<script src="logic.js?v=app-0.1.0"></script>
+<script src="sound.js?v=app-0.1.0"></script>
+<script src="render.js?v=app-0.1.0"></script>
+<script src="ui.js?v=app-0.1.0"></script>
+<script src="boot_check.js?v=app-0.1.0"></script>
+</body>
+</html>
