@@ -113,10 +113,6 @@ const Tut = {
   levelStart: () => {}
 };
 
-function haptic(ms) {
-  try { if (save.settings.vib && navigator.vibrate) navigator.vibrate(ms || 10); } catch (e) {}
-}
-
 let toastTm = null;
 function toast(msg, ms) {
   const el = $('#toast');
@@ -137,28 +133,6 @@ function showOv(name) {
 function hideOv() {
   document.querySelectorAll('.ov').forEach(el => el.classList.remove('show'));
   G.overlay = '';
-}
-
-function parTimes(L) {
-  const c = L ? L.total : 100;
-  return [Math.round(c * 0.35 + 15), Math.round(c * 0.65 + 30)];
-}
-
-function timeStars(t, par) {
-  if (t <= par[0]) return 3;
-  if (t <= par[1]) return 2;
-  return 1;
-}
-
-function endFever() {
-  G.fever.t = 0;
-  G.fever.g = 0;
-}
-
-function startFever() {
-  G.fever.t = G.perk.feverT;
-  if (typeof Sound.fever === 'function') Sound.fever();
-  popup('FEVER!!', bcx(), oy + G.s.H * cs * 0.4, '#ff5a9a', true);
 }
 
 /* ================= ハブ＆画面切り替え ================= */
