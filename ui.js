@@ -24,9 +24,6 @@ const AppBridge = {
 const HEART_MAX = 5;
 const HEART_REGEN_MS = 20 * 60 * 1000; // 20分で1回復
 
-const initSave = loadSaveFromKey(SAVE_KEY, false, { bgm: true, sfx: true, vib: true, cb: false, wash: true, dim: true, info: false, talk: true, steps: false });
-const save = initSave.save;
-
 const APP_DEF = {
   coins: 500,
   hearts: HEART_MAX,
@@ -56,10 +53,6 @@ function initAppSave() {
   if (!save.skin) save.skin = 'none';
 }
 initAppSave();
-
-function persist() {
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {}
-}
 
 function isInfHeart() { return (save.infHeartUntil || 0) > Date.now(); }
 
@@ -105,24 +98,12 @@ function addInfHeartMinutes(min) {
 }
 
 /* ================= ゲーム状態（render.js 互換） ================= */
-const G = {
-  levelId: 1, level: null, s: null,
-  vgrid: null, pgrid: null, vver: 0, pver: 0,
-  ants: [], parts: [], bubbles: [], popups: [], vboxes: [], vslots: [], parades: [],
-  trayOff: [], hc: null, rc: null,
-  fever: { g: 0, t: 0 },
-  perk: { feverT: 8, gold: 1, freeUndo: 0, freeHint: 0 },
-  gold: new Set(),
-  pickFlashes: [], newReachFlashes: [], assignFlashes: [], skillFx: [],
-  press: null, pressJ: -1, hover: -1, hintCol: -1, scanId: 0,
-  overlay: '', loading: false, pendingWin: false, pendingJam: false, jamDismissed: false, clearShown: false,
-  rt: 0, time: 0, antSpeed: 14, spdMul: 1,
-  boardDirty: true, hudDirty: false, pickupMode: false,
-  moves: [], undo: [], run: null, par: [60, 110],
-  loadTok: 0, endT: 0, slotFlash: 0, jamShake: 0, nestBounce: 0, shake: null,
-  reveal: null, viewId: 0, waitIds: new Set(),
-  lastTapT: 0, saidOnce: false, lastSay: 0, bgmBanner: null, skillBanner: null
-};
+G.overlay = '';
+G.pickupMode = false;
+G.pressJ = -1;
+G.waitIds = new Set();
+G.lastTapT = 0;
+G.bgmBanner = null;
 
 const Tut = {
   wantCol: () => -1,
