@@ -404,16 +404,15 @@ function layout() {
   if (!G.s) return;
   const W = G.s.W, H = G.s.H, n = G.s.cols.length;
   framePad = clamp(Math.round(Math.min(CW, CH) * 0.015), 5, 9);
-  const A = planTall(W, H, n), B = planWide(W, H, n), P = B && B.raw >= A.raw * SIDE_MIN ? B : A;
-  boardSide = P.side; cs = P.c; ox = P.ox; oy = P.oy;
+  const P = planTall(W, H, n);
+  boardSide = false; cs = P.c; ox = P.ox; oy = P.oy;
   slotSize = P.s; slotGap = P.g; slotCX = P.slotCX; slotY = P.slotY;
   trayTop = P.trayTop; trayCX = P.trayCX; panelL = P.panelL; panelR = P.panelR;
   colW = P.cw; headSize = P.h; trayHeadY = trayTop + headSize * 0.5 + 10; trayGap = headSize * 0.42;
   antPx = clamp(cs * 1.4, 13, 30); antU = antPx / 2;
   nestR = clamp(Math.min(P.nestRoom, antPx * 0.95 * NEST_SCALE), 10, 50);
   nestX = P.nestX; nestY = P.nestY;
-  // 横ならびのときは、下のボタンを右の操作エリアの下に寄せる（高さは変えないので、レイアウトが行ったり来たりしない）
-  document.body.classList.toggle('wide', boardSide);
+  document.body.classList.remove('wide');
   document.body.style.setProperty('--pw', P.pw + 'px');
   antCache.clear();
   boxCache.clear();

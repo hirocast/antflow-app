@@ -4,8 +4,9 @@
   "description": "ありんこ隊がキャンディを運んでピクセルアートをほどいていく、ひと工夫パズル",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#fff0f5",
-  "theme_color": "#ffe3ee",
+  "orientation": "portrait",
+  "background_color": "#212c63",
+  "theme_color": "#212c63",
   "icons": [
     {
       "src": "icon-192.png",
